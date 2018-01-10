@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\DB;
 use App\Question;
 
 class QuestionController extends Controller
@@ -59,7 +60,16 @@ class QuestionController extends Controller
      */
     public function show($id)
     {
-        //
+        try{
+            $question = Question::find($id);
+            $answers = DB::table('answers')->where('id_question', $id)->get();
+
+            $question->answers = $answers;
+
+            return response()->json($question, 200);
+        }catch(Exception $e){
+            return $e;
+        }
     }
 
     /**
