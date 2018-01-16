@@ -42965,14 +42965,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             questions: [],
             question: [],
+            actions: [],
             questionIndex: '',
-            userResponses: []
+            userResponses: [],
+            isLast: false
         };
     },
     created: function created() {
@@ -42994,12 +43003,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         next: function next() {
             var self = this;
+            var i = 0;
             axios.get('/api/answers/' + this.userResponses[this.userResponses.length - 1]).then(function (response) {
                 self.question.push(response.data);
+                console.log(response.data.actions);
+                if (response.data['desc_question'] == undefined) {
+                    self.isLast = true;
+                } else {
+                    for (var _i = 0; _i < response.data.actions.length; _i++) {
+                        self.actions.push(response.data.actions[_i].desc_action);
+                    }
+                }
             }).catch(function (error) {
                 console.log(error);
             });
-            this.questionIndex++;
         },
         prev: function prev() {
             this.questionIndex--;
@@ -43015,87 +43032,94 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { id: "app" } },
-    [
-      _vm._l(_vm.question, function(question, index) {
-        return _c("div", { key: index }, [
-          _c("h2", [_vm._v(_vm._s(question.desc_question))]),
-          _vm._v(" "),
+  return _c("div", { attrs: { id: "app" } }, [
+    !_vm.isLast
+      ? _c("div", [
           _c(
-            "ol",
-            _vm._l(question.answers, function(response) {
-              return _c("li", [
-                _c("label", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.userResponses[index],
-                        expression: "userResponses[index]"
-                      }
-                    ],
-                    attrs: { type: "radio", name: index, required: "" },
-                    domProps: {
-                      value: response.id,
-                      checked: _vm._q(_vm.userResponses[index], response.id)
-                    },
-                    on: {
-                      change: function($event) {
-                        _vm.$set(_vm.userResponses, index, response.id)
-                      }
-                    }
-                  }),
-                  _vm._v(
-                    " " +
-                      _vm._s(response.desc_answer) +
-                      "\n                    "
-                  )
-                ])
+            "div",
+            _vm._l(_vm.question, function(question, index) {
+              return _c("div", { key: index }, [
+                _c("h2", [_vm._v(_vm._s(question.desc_question))]),
+                _vm._v(" "),
+                _c(
+                  "ol",
+                  _vm._l(question.answers, function(response) {
+                    return _c("li", [
+                      _c("label", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.userResponses[index],
+                              expression: "userResponses[index]"
+                            }
+                          ],
+                          attrs: { type: "radio", name: index, required: "" },
+                          domProps: {
+                            value: response.id,
+                            checked: _vm._q(
+                              _vm.userResponses[index],
+                              response.id
+                            )
+                          },
+                          on: {
+                            change: function($event) {
+                              _vm.$set(_vm.userResponses, index, response.id)
+                            }
+                          }
+                        }),
+                        _vm._v(
+                          " " +
+                            _vm._s(response.desc_answer) +
+                            "\n                        "
+                        )
+                      ])
+                    ])
+                  })
+                )
               ])
             })
+          ),
+          _vm._v(" "),
+          _vm.questionIndex > 0
+            ? _c("button", { on: { click: _vm.prev } }, [
+                _vm._v("\n            prev\n        ")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              on: {
+                click: function($event) {
+                  _vm.next()
+                }
+              }
+            },
+            [_vm._v("\n            next\n        ")]
           )
         ])
-      }),
-      _vm._v(" "),
-      _vm.questionIndex > 0
-        ? _c("button", { on: { click: _vm.prev } }, [
-            _vm._v("\n        prev\n    ")
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          attrs: { type: "submit" },
-          on: {
-            click: function($event) {
-              _vm.next()
-            }
-          }
-        },
-        [_vm._v("\n        next\n    ")]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.questionIndex === this.question.length + 1,
-              expression: "questionIndex === this.question.length+1"
-            }
-          ]
-        },
-        [_c("h2", [_vm._v("\n            Quiz finished\n        ")])]
-      )
-    ],
-    2
-  )
+      : _c("div", [
+          _c(
+            "h2",
+            [
+              _vm._v("\n            Your Actions:"),
+              _c("br"),
+              _c("br"),
+              _vm._v(" "),
+              _vm._l(_vm.actions, function(action) {
+                return _c("p", [
+                  _vm._v(
+                    "\n                " + _vm._s(action) + "\n            "
+                  )
+                ])
+              })
+            ],
+            2
+          )
+        ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true

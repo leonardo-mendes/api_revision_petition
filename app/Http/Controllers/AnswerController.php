@@ -52,11 +52,13 @@ class AnswerController extends Controller
             $answer = Answer::find($id);
             $actions = DB::table('actions')->where('id_answer', $id)->get();
             $next_question = Question::find($answer->next_question);
-            $next_answers = DB::table('answers')->where('id_question', $next_question->id)->get();
 
-            $answer->next_question = $next_question;
-            $answer->next_question->actions = $actions;
-            $answer->next_question->answers = $next_answers;
+            if($next_question){
+                $next_answers = DB::table('answers')->where('id_question', $next_question->id)->get();
+                $answer->next_question = $next_question;
+                $answer->next_question->actions = $actions;
+                $answer->next_question->answers = $next_answers;
+            }
 
             return response()->json($next_question, 200);
         }catch(Exception $e){
