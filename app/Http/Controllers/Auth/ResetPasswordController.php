@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Everis\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
+use Everis\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 
 class ResetPasswordController extends Controller

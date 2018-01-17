@@ -42972,16 +42972,50 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['user_id'],
     data: function data() {
         return {
             questions: [],
             question: [],
             actions: [],
+            results: [],
             questionIndex: '',
             userResponses: [],
-            isLast: false
+            isLast: false,
+            petition: '',
+            form: {
+                action_result: [],
+                id_petition: ''
+            },
+            formPetition: {
+                num_petition: '',
+                desc_petition: '',
+                id_user: ''
+            }
         };
     },
     created: function created() {
@@ -43003,23 +43037,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         next: function next() {
             var self = this;
-            var i = 0;
             axios.get('/api/answers/' + this.userResponses[this.userResponses.length - 1]).then(function (response) {
                 self.question.push(response.data);
-                console.log(response.data.actions);
                 if (response.data['desc_question'] == undefined) {
                     self.isLast = true;
+                    console.log(self.form);
+                    axios.post('/api/results', self.form).then(function (response) {
+                        console.log(response);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
                 } else {
+                    for (var i = 0; i < response.data.actions.length; i++) {
+                        self.actions.push(response.data.actions[i].desc_action);
+                    }
                     for (var _i = 0; _i < response.data.actions.length; _i++) {
-                        self.actions.push(response.data.actions[_i].desc_action);
+                        self.form.action_result.push(response.data.actions[_i].id);
                     }
                 }
             }).catch(function (error) {
                 console.log(error);
             });
+            this.questionIndex++;
         },
-        prev: function prev() {
-            this.questionIndex--;
+        savePetition: function savePetition() {
+            var self = this;
+            self.formPetition.id_user = self.user_id;
+            self.formPetition.num_petition = self.petition;
+            axios.post('/api/petitions', self.formPetition).then(function (response) {
+                self.form.id_petition = response.data;
+                console.log(self.form.id_petition);
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
     }
 });
@@ -43039,54 +43089,71 @@ var render = function() {
             "div",
             _vm._l(_vm.question, function(question, index) {
               return _c("div", { key: index }, [
-                _c("h2", [_vm._v(_vm._s(question.desc_question))]),
-                _vm._v(" "),
                 _c(
-                  "ol",
-                  _vm._l(question.answers, function(response) {
-                    return _c("li", [
-                      _c("label", [
-                        _c("input", {
-                          directives: [
-                            {
-                              name: "model",
-                              rawName: "v-model",
-                              value: _vm.userResponses[index],
-                              expression: "userResponses[index]"
-                            }
-                          ],
-                          attrs: { type: "radio", name: index, required: "" },
-                          domProps: {
-                            value: response.id,
-                            checked: _vm._q(
-                              _vm.userResponses[index],
-                              response.id
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: index === _vm.questionIndex,
+                        expression: "index === questionIndex"
+                      }
+                    ]
+                  },
+                  [
+                    _c("h2", [_vm._v(_vm._s(question.desc_question))]),
+                    _vm._v(" "),
+                    _c(
+                      "ol",
+                      _vm._l(question.answers, function(response) {
+                        return _c("li", [
+                          _c("label", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.userResponses[index],
+                                  expression: "userResponses[index]"
+                                }
+                              ],
+                              attrs: {
+                                type: "radio",
+                                name: index,
+                                required: ""
+                              },
+                              domProps: {
+                                value: response.id,
+                                checked: _vm._q(
+                                  _vm.userResponses[index],
+                                  response.id
+                                )
+                              },
+                              on: {
+                                change: function($event) {
+                                  _vm.$set(
+                                    _vm.userResponses,
+                                    index,
+                                    response.id
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(
+                              " " +
+                                _vm._s(response.desc_answer) +
+                                "\n                            "
                             )
-                          },
-                          on: {
-                            change: function($event) {
-                              _vm.$set(_vm.userResponses, index, response.id)
-                            }
-                          }
-                        }),
-                        _vm._v(
-                          " " +
-                            _vm._s(response.desc_answer) +
-                            "\n                        "
-                        )
-                      ])
-                    ])
-                  })
+                          ])
+                        ])
+                      })
+                    )
+                  ]
                 )
               ])
             })
           ),
-          _vm._v(" "),
-          _vm.questionIndex > 0
-            ? _c("button", { on: { click: _vm.prev } }, [
-                _vm._v("\n            prev\n        ")
-              ])
-            : _vm._e(),
           _vm._v(" "),
           _c(
             "button",
@@ -43118,10 +43185,150 @@ var render = function() {
             ],
             2
           )
-        ])
+        ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "exampleModalCenter",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalCenterTitle",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                  _vm._v("Petition")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.petition,
+                      expression: "petition"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    placeholder: "Enter Petition Number",
+                    required: ""
+                  },
+                  domProps: { value: _vm.petition },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.petition = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
+                  _vm._v("Petition Description")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.formPetition.desc_petition,
+                      expression: "formPetition.desc_petition"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { rows: "3" },
+                  domProps: { value: _vm.formPetition.desc_petition },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.formPetition,
+                        "desc_petition",
+                        $event.target.value
+                      )
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary closeModal",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary saveChanges",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.savePetition()
+                      }
+                    }
+                  },
+                  [_vm._v("Save changes")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLongTitle" } },
+        [_vm._v("Modal title")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "closeModal close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

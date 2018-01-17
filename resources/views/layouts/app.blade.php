@@ -12,10 +12,15 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
+        <a class="navbar-brand" href="#">
+            <img src="imgs/1.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
+        </a>
             <div class="container">
                 <div class="navbar-header">                    
                     <!-- Collapsed Hamburger -->
@@ -28,7 +33,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'everis') }}
                     </a>
                 </div>
 
@@ -75,5 +80,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+
 </body>
 </html>

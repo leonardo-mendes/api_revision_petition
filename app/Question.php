@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Everis;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,10 +10,10 @@ class Question extends Model
     protected $fillable = ['desc_question'];
     
     public function answers(){
-            return $this->hasMany('App\Answer', 'id_question', 'next_question');
+            return $this->hasMany('Everis\Answer', 'id_question', 'next_question');
     }
 
     public function status(){
-        return $this->hasOne('App\Status', 'id_status');
+        return $this->hasOne('Everis\Status', 'id_status');
     }
 }

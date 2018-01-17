@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Everis\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Petition;
+use Everis\Petition;
 
 class PetitionController extends Controller
 {
@@ -39,7 +39,7 @@ class PetitionController extends Controller
             $data = $request->all();
             $petition = Petition::create($data);
             
-            return response()->json(['data'=>$petition, 'status'=>true]);
+            return response()->json($petition->id);
         }catch(Exception $e){
             return response()->json(['data'=>'Could not create a Petition.', 'status'=>true]);
         }

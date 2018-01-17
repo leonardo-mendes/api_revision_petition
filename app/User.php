@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Everis;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -28,6 +28,6 @@ class User extends Authenticatable
     ];
 
     public function petitions(){
-        return $this->hasMany('App\Petition');
+        return $this->hasMany('Everis\Petition');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace Everis;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,10 +12,10 @@ class Petition extends Model
     protected $hidden = ['created_at', 'updated_at'];
 
     public function results(){
-            return $this->hasOne('App\Result', 'id_petition');
+            return $this->hasOne('Everis\Result', 'id_petition');
     }
 
     public function users(){
-        return $this->belongsTo('App\User', 'id_user');
+        return $this->belongsTo('Everis\User', 'id_user');
     }
 }

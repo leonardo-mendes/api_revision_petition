@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Everis\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
-use App\Question;
+use Everis\Question;
 
 class QuestionController extends Controller
 {
