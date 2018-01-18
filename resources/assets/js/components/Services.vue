@@ -37,14 +37,14 @@
                     </div>
                     <div class="modal-body">
                         <label for="exampleInputEmail1">Petition Number</label>
-                        <input type="text" class="form-control" placeholder="Enter Petition Number" required>
+                        <input type="text" class="form-control" placeholder="Enter Petition Number" v-model="petition">
                         <br>
                         <label for="exampleFormControlTextarea1">Petition Description</label>
-                        <textarea class="form-control" rows="3" placeholder="Enter Petition Description"></textarea>
+                        <textarea class="form-control" rows="3" placeholder="Enter Petition Description" v-model="form.desc_petition"></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-primary" v-on:click="savePetition()">Save</button>
                     </div>
                 </div>
             </div>
@@ -76,80 +76,23 @@
         props: ['user_id'],
         data() {
             return {
-                questions: [],
-                question: [],
-                actions: [],
-                results: [],
-                questionIndex: '',
-                userResponses: [],
-                isLast: false,
                 petition: '',
                 form: {
-                    action_result: [],
-                    id_petition: ''
-                },
-                formPetition: {
                     num_petition: '',
                     desc_petition: '',
                     id_user: ''
                 }
             }
         },
-        created() {
-            this.questions = [];
-            let self = this;
-            axios.get('/api/questions/1')
-            .then(function (response) {
-                self.question.push(response.data);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        },
-        mounted() {
-            this.questionIndex = 0;
-            for (let i = 0; i < this.questions.length; i++) {
-                this.userResponses[i] = false;
-            }
-        },
         methods: {
-            next: function() {
-                let self = this;
-                axios.get('/api/answers/' + this.userResponses[this.userResponses.length-1])
-                .then(function (response) {
-                    self.question.push(response.data);
-                    if(response.data['desc_question'] == undefined){
-                        self.isLast = true;
-                        console.log(self.form);
-                        axios.post('/api/results' , self.form)
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                    }else{
-                        for(let i = 0; i<response.data.actions.length; i++){
-                            self.actions.push(response.data.actions[i].desc_action);
-                        }
-                        for(let i = 0; i<response.data.actions.length; i++){
-                            self.form.action_result.push(response.data.actions[i].id);
-                        }
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-                this.questionIndex++;
-            },
             savePetition: function(){
                 let self = this;
-                self.formPetition.id_user = self.user_id;
-                self.formPetition.num_petition = self.petition;
-                axios.post('/api/petitions', self.formPetition)
-                .then(function (response) {
-                   self.form.id_petition = response.data;   
-                   console.log( self.form.id_petition);               
+                self.form.id_user = self.user_id;
+                self.form.num_petition = self.petition;
+                console.log(this.form);
+                axios.post('/api/petitions', self.form)
+                .then(function (response) { 
+                   console.log(response);               
                 })
                 .catch(function (error) {
                     console.log(error);

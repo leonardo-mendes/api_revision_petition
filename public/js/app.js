@@ -43307,74 +43307,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: ['user_id'],
     data: function data() {
         return {
-            questions: [],
-            question: [],
-            actions: [],
-            results: [],
-            questionIndex: '',
-            userResponses: [],
-            isLast: false,
             petition: '',
             form: {
-                action_result: [],
-                id_petition: ''
-            },
-            formPetition: {
                 num_petition: '',
                 desc_petition: '',
                 id_user: ''
             }
         };
     },
-    created: function created() {
-        this.questions = [];
-        var self = this;
-        axios.get('/api/questions/1').then(function (response) {
-            self.question.push(response.data);
-        }).catch(function (error) {
-            console.log(error);
-        });
-    },
-    mounted: function mounted() {
-        this.questionIndex = 0;
-        for (var i = 0; i < this.questions.length; i++) {
-            this.userResponses[i] = false;
-        }
-    },
 
     methods: {
-        next: function next() {
-            var self = this;
-            axios.get('/api/answers/' + this.userResponses[this.userResponses.length - 1]).then(function (response) {
-                self.question.push(response.data);
-                if (response.data['desc_question'] == undefined) {
-                    self.isLast = true;
-                    console.log(self.form);
-                    axios.post('/api/results', self.form).then(function (response) {
-                        console.log(response);
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else {
-                    for (var i = 0; i < response.data.actions.length; i++) {
-                        self.actions.push(response.data.actions[i].desc_action);
-                    }
-                    for (var _i = 0; _i < response.data.actions.length; _i++) {
-                        self.form.action_result.push(response.data.actions[_i].id);
-                    }
-                }
-            }).catch(function (error) {
-                console.log(error);
-            });
-            this.questionIndex++;
-        },
         savePetition: function savePetition() {
             var self = this;
-            self.formPetition.id_user = self.user_id;
-            self.formPetition.num_petition = self.petition;
-            axios.post('/api/petitions', self.formPetition).then(function (response) {
-                self.form.id_petition = response.data;
-                console.log(self.form.id_petition);
+            self.form.id_user = self.user_id;
+            self.form.num_petition = self.petition;
+            console.log(this.form);
+            axios.post('/api/petitions', self.form).then(function (response) {
+                console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
@@ -43390,223 +43339,268 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { attrs: { id: "app" } }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "modal fade", attrs: { id: "myModal", role: "dialog" } },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                _vm._v("Petition Number")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.petition,
+                    expression: "petition"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", placeholder: "Enter Petition Number" },
+                domProps: { value: _vm.petition },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.petition = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("br"),
+              _vm._v(" "),
+              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
+                _vm._v("Petition Description")
+              ]),
+              _vm._v(" "),
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.desc_petition,
+                    expression: "form.desc_petition"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { rows: "3", placeholder: "Enter Petition Description" },
+                domProps: { value: _vm.form.desc_petition },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "desc_petition", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-default",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Close")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.savePetition()
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              )
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _vm._m(2)
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "app" } }, [
-      _c("div", { staticClass: "bg-grey" }, [
-        _c("h4", [_vm._v("Navigate through the options below")]),
-        _c("br"),
+    return _c("div", { staticClass: "bg-grey" }, [
+      _c("h4", [_vm._v("Navigate through the options below")]),
+      _c("br"),
+      _vm._v(" "),
+      _c("div", { staticClass: "row text-center" }, [
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c("div", { staticClass: "thumbnail" }, [
+            _c("p", [_c("b", [_vm._v("Petitions Guide")])]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "This service will assist you in your petitions, indicating actions to be taken."
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: {
+                  type: "button",
+                  "data-toggle": "modal",
+                  "data-target": "#myModal"
+                }
+              },
+              [_vm._v("Start")]
+            )
+          ])
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "row text-center" }, [
-          _c("div", { staticClass: "col-sm-4" }, [
-            _c("div", { staticClass: "thumbnail" }, [
-              _c("p", [_c("b", [_vm._v("Petitions Guide")])]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "This service will assist you in your petitions, indicating actions to be taken."
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "modal",
-                    "data-target": "#myModal"
-                  }
-                },
-                [_vm._v("Start")]
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c("div", { staticClass: "thumbnail" }, [
+            _c("p", [_c("b", [_vm._v("Search Actions")])]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "If you made a petition questionnaire and lost your actions, look then here."
               )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-4" }, [
-            _c("div", { staticClass: "thumbnail" }, [
-              _c("p", [_c("b", [_vm._v("Search Actions")])]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "If you made a petition questionnaire and lost your actions, look then here."
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-primary",
-                  attrs: {
-                    type: "button",
-                    "data-toggle": "modal",
-                    "data-target": "#modalSearch"
-                  }
-                },
-                [_vm._v("Start")]
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: {
+                  type: "button",
+                  "data-toggle": "modal",
+                  "data-target": "#modalSearch"
+                }
+              },
+              [_vm._v("Start")]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-sm-4" }, [
+          _c("div", { staticClass: "thumbnail" }, [
+            _c("p", [_c("b", [_vm._v("Petitions Controller")])]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "Petitions controller, close your actions and look the progress."
               )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-4" }, [
-            _c("div", { staticClass: "thumbnail" }, [
-              _c("p", [_c("b", [_vm._v("Petitions Controller")])]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "Petitions controller, close your actions and look the progress."
-                )
-              ]),
-              _vm._v(" "),
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button", title: "In progress!", disabled: "" }
+              },
+              [_vm._v("Start")]
+            )
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("×")]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Petition Guide")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "modalSearch", role: "dialog" }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c("div", { staticClass: "modal-header" }, [
               _c(
                 "button",
                 {
-                  staticClass: "btn btn-primary",
-                  attrs: { type: "button", title: "In progress!", disabled: "" }
+                  staticClass: "close",
+                  attrs: { type: "button", "data-dismiss": "modal" }
                 },
-                [_vm._v("Start")]
+                [_vm._v("×")]
+              ),
+              _vm._v(" "),
+              _c("h4", { staticClass: "modal-title" }, [
+                _vm._v("Search Actions")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-body" }, [
+              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                _vm._v("Petition Number")
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  placeholder: "Enter Petition Number",
+                  required: ""
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "modal-footer" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-default",
+                  attrs: { type: "button", "data-dismiss": "modal" }
+                },
+                [_vm._v("Close")]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                { staticClass: "btn btn-primary", attrs: { type: "button" } },
+                [_vm._v("Send")]
               )
             ])
           ])
         ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "modal fade", attrs: { id: "myModal", role: "dialog" } },
-        [
-          _c("div", { staticClass: "modal-dialog" }, [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("×")]
-                ),
-                _vm._v(" "),
-                _c("h4", { staticClass: "modal-title" }, [
-                  _vm._v("Petition Guide")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("label", { attrs: { for: "exampleInputEmail1" } }, [
-                  _vm._v("Petition Number")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    placeholder: "Enter Petition Number",
-                    required: ""
-                  }
-                }),
-                _vm._v(" "),
-                _c("br"),
-                _vm._v(" "),
-                _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
-                  _vm._v("Petition Description")
-                ]),
-                _vm._v(" "),
-                _c("textarea", {
-                  staticClass: "form-control",
-                  attrs: {
-                    rows: "3",
-                    placeholder: "Enter Petition Description"
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-footer" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-default",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("Close")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("Save")]
-                )
-              ])
-            ])
-          ])
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "modal fade",
-          attrs: { id: "modalSearch", role: "dialog" }
-        },
-        [
-          _c("div", { staticClass: "modal-dialog" }, [
-            _c("div", { staticClass: "modal-content" }, [
-              _c("div", { staticClass: "modal-header" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "close",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("×")]
-                ),
-                _vm._v(" "),
-                _c("h4", { staticClass: "modal-title" }, [
-                  _vm._v("Search Actions")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-body" }, [
-                _c("label", { attrs: { for: "exampleInputEmail1" } }, [
-                  _vm._v("Petition Number")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "text",
-                    placeholder: "Enter Petition Number",
-                    required: ""
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "modal-footer" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-default",
-                    attrs: { type: "button", "data-dismiss": "modal" }
-                  },
-                  [_vm._v("Close")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("Send")]
-                )
-              ])
-            ])
-          ])
-        ]
-      )
-    ])
+      ]
+    )
   }
 ]
 render._withStripped = true
