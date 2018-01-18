@@ -13,7 +13,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <example-component :user_id={{ Auth::user()->id }}></example-component>
+                    <questions :user_id={{ Auth::user()->id }}></questions>
                 </div>
             </div>
         </div>

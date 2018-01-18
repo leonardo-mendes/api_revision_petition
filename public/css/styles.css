@@ -4,5 +4,53 @@
 
 .carousel-inner .item img {
     object-fit: cover;
-    height: 500px;
+    height: 92vh;
+}
+
+.control{
+    margin-top: 30px;
+}
+
+.row h2{
+    margin-top: 60px;
+}
+
+.thumbnail {
+    padding:20px;
+}
+
+.logo {
+    font-size: 200px;
+}
+
+.logo-small {
+    color: #9aad04;
+    font-size: 50px;
+}
+
+.logo {
+    color: #9aad04;
+    font-size: 200px;
+}
+
+@media screen and (max-width: 768px) {
+    .col-sm-3 {
+        text-align: center;
+        margin: 25px 0;
+    }
+
+    .row h2{
+        margin-top: -5px;
+    }
+
+    .col-sm-9 {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .col-sm-9 {
+        text-align: center;
+        margin: 25px 0;
+    }
 }

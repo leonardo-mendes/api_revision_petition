@@ -19,7 +19,7 @@
     <div id="app">
         <nav class="navbar navbar-default navbar-static-top">
         <a class="navbar-brand" href="#">
-            <img src="imgs/1.jpg" width="30" height="30" class="d-inline-block align-top" alt="">
+            <img src="imgs/logo.png" width="60" height="30" class="d-inline-block align-top" alt="">
         </a>
             <div class="container">
                 <div class="navbar-header">                    
@@ -33,7 +33,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'everis') }}
+                        {{ config('app.name', 'Laravel') }}
                     </a>
                 </div>
 

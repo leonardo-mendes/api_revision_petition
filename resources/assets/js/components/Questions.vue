@@ -30,29 +30,6 @@
                 </p>
             </h2>
         </div>
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-                <button type="button" class="closeModal close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label for="exampleInputEmail1">Petition</label>
-                <input type="text" class="form-control" v-model="petition"  placeholder="Enter Petition Number" required>
-                <br>
-                <label for="exampleFormControlTextarea1">Petition Description</label>
-                <textarea class="form-control" v-model="formPetition.desc_petition" rows="3"></textarea>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary closeModal" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary saveChanges" @click="savePetition()">Save changes</button>
-            </div>
-            </div>
-        </div>
-        </div>
     </div>
 </template>
 <script>
