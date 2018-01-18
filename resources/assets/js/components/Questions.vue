@@ -4,7 +4,7 @@
             <div >    
                 <div v-for="(question, index) in question" :key="index">
                     <div v-show="index === questionIndex">
-                        <h2>{{ question.desc_question }}</h2>
+                        <h3 style="margin-top: 46px">{{ question.desc_question }}</h3>
                         <ol>
                             <li v-for="response in question.answers">
                                 <label>
@@ -18,17 +18,17 @@
                     </div>
                 </div>            
             </div>
-            <button v-on:click="next()">
-                next
-            </button>
+            <button class="btn btn-primary" v-on:click="next()">Next</button>
         </div>    
         <div v-else>
-            <h2>
+            <h3  style="margin-top: 46px">
                 Your Actions:<br><br>
-                <p v-for="action in actions">
-                    {{action}}
+                <p style="font-size:15px" v-for="action in actions">
+                   - {{action}}
                 </p>
-            </h2>
+            </h3><br>
+            <a href="/home" type="button" class="btn btn-default">Close</a>
+            <a href="/home" type="button" class="btn btn-primary">Print</a>
         </div>
     </div>
 </template>
@@ -48,11 +48,6 @@
                 form: {
                     action_result: [],
                     id_petition: ''
-                },
-                formPetition: {
-                    num_petition: '',
-                    desc_petition: '',
-                    id_user: ''
                 }
             }
         },
@@ -69,9 +64,6 @@
         },
         mounted() {
             this.questionIndex = 0;
-            for (let i = 0; i < this.questions.length; i++) {
-                this.userResponses[i] = false;
-            }
         },
         methods: {
             next: function() {
@@ -81,7 +73,17 @@
                     self.question.push(response.data);
                     if(response.data['desc_question'] == undefined){
                         self.isLast = true;
-                        console.log(self.form);
+
+                        axios.get('/api/petitions/current/' + self.user_id)
+                        .then(function (response) {
+                            self.petition = response.data;
+                            console.log(self.form.id_petition);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+
+                        self.form.id_petition = petition;
                         axios.post('/api/results' , self.form)
                         .then(function (response) {
                             console.log(response);
@@ -102,19 +104,6 @@
                     console.log(error);
                 });
                 this.questionIndex++;
-            },
-            savePetition: function(){
-                let self = this;
-                self.formPetition.id_user = self.user_id;
-                self.formPetition.num_petition = self.petition;
-                axios.post('/api/petitions', self.formPetition)
-                .then(function (response) {
-                   self.form.id_petition = response.data;   
-                   console.log( self.form.id_petition);               
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
             }
         }
     }

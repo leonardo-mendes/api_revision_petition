@@ -18,3 +18,5 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@getDashboard')->name('home');
+Route::get('/question', 'HomeController@getQuestion')->name('question');
+Route::get('/results/petition/{petition}', 'ResultController@getQuestion')->name('petition_results');

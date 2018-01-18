@@ -3,6 +3,7 @@
 namespace Everis\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Everis\Petition;
 
 class PetitionController extends Controller
@@ -45,6 +46,16 @@ class PetitionController extends Controller
         }
     }
 
+    public function currentPetition($user){
+        try{
+            $petition = DB::table('petitions')->where('id_user', $user)->orderBy('created_at', 'desc')->first();
+            
+            return response()->json($petition->id);
+        }catch(Exception $e){
+            return response()->json(['data'=>'Could not find a Petition.', 'status'=>false]);
+        }
+    }
+
     /**
      * Display the specified resource.
      *
@@ -55,7 +66,6 @@ class PetitionController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      *

@@ -42988,11 +42988,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             form: {
                 action_result: [],
                 id_petition: ''
-            },
-            formPetition: {
-                num_petition: '',
-                desc_petition: '',
-                id_user: ''
             }
         };
     },
@@ -43007,9 +43002,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         this.questionIndex = 0;
-        for (var i = 0; i < this.questions.length; i++) {
-            this.userResponses[i] = false;
-        }
     },
 
     methods: {
@@ -43019,7 +43011,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 self.question.push(response.data);
                 if (response.data['desc_question'] == undefined) {
                     self.isLast = true;
-                    console.log(self.form);
+
+                    axios.get('/api/petitions/current/' + self.user_id).then(function (response) {
+                        self.petition = response.data;
+                        console.log(self.form.id_petition);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+                    self.form.id_petition = petition;
                     axios.post('/api/results', self.form).then(function (response) {
                         console.log(response);
                     }).catch(function (error) {
@@ -43037,17 +43037,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
             this.questionIndex++;
-        },
-        savePetition: function savePetition() {
-            var self = this;
-            self.formPetition.id_user = self.user_id;
-            self.formPetition.num_petition = self.petition;
-            axios.post('/api/petitions', self.formPetition).then(function (response) {
-                self.form.id_petition = response.data;
-                console.log(self.form.id_petition);
-            }).catch(function (error) {
-                console.log(error);
-            });
         }
     }
 });
@@ -43080,7 +43069,9 @@ var render = function() {
                     ]
                   },
                   [
-                    _c("h2", [_vm._v(_vm._s(question.desc_question))]),
+                    _c("h3", { staticStyle: { "margin-top": "46px" } }, [
+                      _vm._v(_vm._s(question.desc_question))
+                    ]),
                     _vm._v(" "),
                     _c(
                       "ol",
@@ -43136,32 +43127,53 @@ var render = function() {
           _c(
             "button",
             {
+              staticClass: "btn btn-primary",
               on: {
                 click: function($event) {
                   _vm.next()
                 }
               }
             },
-            [_vm._v("\n            next\n        ")]
+            [_vm._v("Next")]
           )
         ])
       : _c("div", [
           _c(
-            "h2",
+            "h3",
+            { staticStyle: { "margin-top": "46px" } },
             [
               _vm._v("\n            Your Actions:"),
               _c("br"),
               _c("br"),
               _vm._v(" "),
               _vm._l(_vm.actions, function(action) {
-                return _c("p", [
+                return _c("p", { staticStyle: { "font-size": "15px" } }, [
                   _vm._v(
-                    "\n                " + _vm._s(action) + "\n            "
+                    "\n               - " + _vm._s(action) + "\n            "
                   )
                 ])
               })
             ],
             2
+          ),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-default",
+              attrs: { href: "/home", type: "button" }
+            },
+            [_vm._v("Close")]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "btn btn-primary",
+              attrs: { href: "/home", type: "button" }
+            },
+            [_vm._v("Print")]
           )
         ])
   ])
@@ -43302,6 +43314,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['user_id'],
@@ -43350,9 +43364,111 @@ var render = function() {
           _c("div", { staticClass: "modal-content" }, [
             _vm._m(1),
             _vm._v(" "),
+            _c("form", { attrs: { action: "/question" } }, [
+              _c("div", { staticClass: "modal-body" }, [
+                _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+                  _vm._v("Petition Number*")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.petition,
+                      expression: "petition"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "number",
+                    placeholder: "Enter Petition Number",
+                    required: ""
+                  },
+                  domProps: { value: _vm.petition },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.petition = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
+                  _vm._v("Petition Description*")
+                ]),
+                _vm._v(" "),
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.desc_petition,
+                      expression: "form.desc_petition"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    rows: "3",
+                    placeholder: "Enter Petition Description",
+                    required: ""
+                  },
+                  domProps: { value: _vm.form.desc_petition },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "desc_petition", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Close")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "submit" },
+                    on: { click: _vm.savePetition }
+                  },
+                  [_vm._v("Save")]
+                )
+              ])
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: { id: "modalSearch", role: "dialog" }
+      },
+      [
+        _c("div", { staticClass: "modal-dialog" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _vm._m(2),
+            _vm._v(" "),
             _c("div", { staticClass: "modal-body" }, [
               _c("label", { attrs: { for: "exampleInputEmail1" } }, [
-                _vm._v("Petition Number")
+                _vm._v("Petition Number*")
               ]),
               _vm._v(" "),
               _c("input", {
@@ -43360,47 +43476,23 @@ var render = function() {
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.petition,
-                    expression: "petition"
+                    value: _vm.petition.number,
+                    expression: "petition.number"
                   }
                 ],
                 staticClass: "form-control",
-                attrs: { type: "text", placeholder: "Enter Petition Number" },
-                domProps: { value: _vm.petition },
+                attrs: {
+                  type: "text",
+                  placeholder: "Enter Petition Number",
+                  required: ""
+                },
+                domProps: { value: _vm.petition.number },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.petition = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "exampleFormControlTextarea1" } }, [
-                _vm._v("Petition Description")
-              ]),
-              _vm._v(" "),
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.form.desc_petition,
-                    expression: "form.desc_petition"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { rows: "3", placeholder: "Enter Petition Description" },
-                domProps: { value: _vm.form.desc_petition },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.form, "desc_petition", $event.target.value)
+                    _vm.$set(_vm.petition, "number", $event.target.value)
                   }
                 }
               })
@@ -43417,25 +43509,21 @@ var render = function() {
               ),
               _vm._v(" "),
               _c(
-                "button",
+                "a",
                 {
                   staticClass: "btn btn-primary",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      _vm.savePetition()
-                    }
+                  attrs: {
+                    href: "/petition/" + _vm.petition.number,
+                    type: "button"
                   }
                 },
-                [_vm._v("Save")]
+                [_vm._v("Send")]
               )
             ])
           ])
         ])
       ]
-    ),
-    _vm._v(" "),
-    _vm._m(2)
+    )
   ])
 }
 var staticRenderFns = [
@@ -43542,65 +43630,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticClass: "modal fade",
-        attrs: { id: "modalSearch", role: "dialog" }
-      },
-      [
-        _c("div", { staticClass: "modal-dialog" }, [
-          _c("div", { staticClass: "modal-content" }, [
-            _c("div", { staticClass: "modal-header" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "close",
-                  attrs: { type: "button", "data-dismiss": "modal" }
-                },
-                [_vm._v("×")]
-              ),
-              _vm._v(" "),
-              _c("h4", { staticClass: "modal-title" }, [
-                _vm._v("Search Actions")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "modal-body" }, [
-              _c("label", { attrs: { for: "exampleInputEmail1" } }, [
-                _vm._v("Petition Number")
-              ]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "text",
-                  placeholder: "Enter Petition Number",
-                  required: ""
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "modal-footer" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-default",
-                  attrs: { type: "button", "data-dismiss": "modal" }
-                },
-                [_vm._v("Close")]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                [_vm._v("Send")]
-              )
-            ])
-          ])
-        ])
-      ]
-    )
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("×")]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title" }, [_vm._v("Search Actions")])
+    ])
   }
 ]
 render._withStripped = true

@@ -35,17 +35,19 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Petition Guide</h4>
                     </div>
-                    <div class="modal-body">
-                        <label for="exampleInputEmail1">Petition Number</label>
-                        <input type="text" class="form-control" placeholder="Enter Petition Number" v-model="petition">
-                        <br>
-                        <label for="exampleFormControlTextarea1">Petition Description</label>
-                        <textarea class="form-control" rows="3" placeholder="Enter Petition Description" v-model="form.desc_petition"></textarea>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" v-on:click="savePetition()">Save</button>
-                    </div>
+                    <form action="/question">
+                        <div class="modal-body">
+                            <label for="exampleInputEmail1">Petition Number*</label>
+                            <input type="number" class="form-control" placeholder="Enter Petition Number" v-model="petition" required>
+                            <br>
+                            <label for="exampleFormControlTextarea1">Petition Description*</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter Petition Description" v-model="form.desc_petition" required></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" @click="savePetition">Save</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -59,12 +61,12 @@
                         <h4 class="modal-title">Search Actions</h4>
                     </div>
                     <div class="modal-body">
-                        <label for="exampleInputEmail1">Petition Number</label>
-                        <input type="text" class="form-control" placeholder="Enter Petition Number" required>
+                        <label for="exampleInputEmail1">Petition Number*</label>
+                        <input type="text" class="form-control" placeholder="Enter Petition Number" v-model="petition.number" required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Send</button>
+                        <a :href="'/petition/' + petition.number" type="button" class="btn btn-primary">Send</a>
                     </div>
                 </div>
             </div>
